@@ -103,7 +103,23 @@ class BinaryTree {
    * which is larger than lowerBound. Return null if no such value exists. */
 
   nextLarger(lowerBound) {
+    if (!this.root)
+      return null;
 
+    // call the helper function to find the next larger value
+    function findNextLarger(node) {
+      if (node === null)
+        return null;
+
+      // if the current node value is less than or equal to the lower bound, search the right subtree
+      if (node.val <= lowerBound)
+        return findNextLarger(node.right);
+
+      // if the current node value is greater than the lower bound, search the left subtree
+      const left = findNextLarger(node.left);
+      return (left !== null) ? left : node.val;
+    }
+    return findNextLarger(this.root);
   }
 
   /** Further study!
