@@ -17,7 +17,21 @@ class BinaryTree {
    * the length of the shortest path from the root to a leaf. */
 
   minDepth() {
+    if (!this.root)
+      return 0;
 
+    // Call the helper function to find the minimum depth
+    function findMinDepth(node) {
+      // If node is null, return Infinity
+      if (!node)
+        return Infinity;
+      // If node is a leaf, return 1
+      if (!node.left && !node.right)
+        return 1;
+
+      // Otherwise, return the minimum depth of the left and right subtrees
+      return Math.min(findMinDepth(node.left), findMinDepth(node.right)) + 1;
+    }
   }
 
   /** maxDepth(): return the maximum depth of the tree -- that is,
@@ -68,7 +82,7 @@ class BinaryTree {
    * of two nodes in a binary tree. */
 
   lowestCommonAncestor(node1, node2) {
-    
+
   }
 }
 
