@@ -18,6 +18,7 @@ class Tree {
     if (!this.root)
       return 0;
 
+    // start with the value of the root
     let sum = this.root.val;
 
     function sumNodeValues(node) {
@@ -40,7 +41,26 @@ class Tree {
   /** countEvens(): count all of the nodes in the tree with even values. */
 
   countEvens() {
+    if (!this.root)
+      return 0;
 
+    let count = this.root.val % 2 === 0 ? 1 : 0;
+
+    function countEvenNodes(node) {
+      // go through each child of a node
+      for (let child of node.children) {
+        // if the value of the child is even, add 1 to the count
+        if (child.val % 2 === 0) count++;
+
+        // if the child has children, call the function again
+        if (child.children.length > 0) {
+          countEvenNodes(child);
+        }
+      }
+    }
+    countEvenNodes(this.root);
+
+    return count;
   }
 
   /** numGreater(lowerBound): return a count of the number of nodes
