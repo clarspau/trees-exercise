@@ -127,29 +127,134 @@ class BinaryTree {
    * (i.e. are at the same level but have different parents. ) */
 
   areCousins(node1, node2) {
+    if (node1 === this.root || node2 === this.root)
+      return false;
 
+    // call the helper function to find the level and parent of the nodes
+    function findLevelAndParent(
+      nodeToFind,
+      currentNode,
+      level = 0,
+      data = { level: 0, parent: null }
+    ) {
+      // if the parent is found, return the data
+      if (data.parent) return data;
+
+      // if the current node is the node to find, update the data and return it
+      if (currentNode.left === nodeToFind || currentNode.right === nodeToFind) {
+        data.level = level + 1;
+        data.parent = currentNode;
+      }
+
+      // if the current node is not the node to find, search the left and right subtrees
+      if (currentNode.left) {
+        findLevelAndParent(nodeToFind, currentNode.left, level + 1, data);
+      }
+
+      // if the current node is not the node to find, search the right subtree
+      if (currentNode.right) {
+        findLevelAndParent(nodeToFind, currentNode.right, level + 1, data);
+      }
+      return data;
+    }
+
+    // call the helper function to find the level and parent of the nodes
+    let node1Info = findLevelAndParent(node1, this.root);
+    let node2Info = findLevelAndParent(node2, this.root);
+
+    let sameLevel =
+      node1Info && node2Info && node1Info.level === node2Info.level;
+    let differentParents =
+      node1Info && node2Info && node1Info.parent !== node2Info.parent;
+
+    return sameLevel && differentParents;
   }
 
   /** Further study!
    * serialize(tree): serialize the BinaryTree object tree into a string. */
 
-  static serialize() {
+  static serialize(tree) {
+    // create an array to store the values of the nodes
+    const values = [];
 
+    // call the helper function to traverse the tree and store the values
+    function traverse(node) {
+      // if the node is not null, store the value and traverse the left and right subtrees
+      if (node) {
+        values.push(node.val);
+        traverse(node.left);
+        traverse(node.right);
+      }
+
+      // if the node is null, store a placeholder
+      else {
+        values.push("#");
+      }
+    }
+
+    // call the helper function to traverse the tree
+    traverse(tree.root);
+
+    return values.join(" ");
   }
 
   /** Further study!
    * deserialize(stringTree): deserialize stringTree into a BinaryTree object. */
 
-  static deserialize() {
+  static deserialize(stringTree) {
+    // if the string tree is empty, return null
+    if (!stringTree) return null;
 
+    // split the string tree into an array of values
+    const values = stringTree.split(" ");
+
+    // call the helper function to build the tree
+    function buildTree() {
+      // building a tree starting from the beginning of the array
+      if (values.length) {
+        const currentVal = values.shift();
+
+        // if the current value is a placeholder, return null
+        if (currentVal === "#") return null;
+
+        // remember to convert values back into numbers
+        let currentNode = new BinaryTreeNode(+currentVal);
+        currentNode.left = buildTree();
+        currentNode.right = buildTree();
+
+        return currentNode;
+      }
+    }
+
+    const root = buildTree();
+    return new BinaryTree(root);
   }
 
   /** Further study!
    * lowestCommonAncestor(node1, node2): find the lowest common ancestor
    * of two nodes in a binary tree. */
 
-  lowestCommonAncestor(node1, node2) {
+  lowestCommonAncestor(node1, node2, currentNode = this.root) {
+    // base case 1: empty tree
+    if (currentNode === null) return null;
 
+    // base case 2: root is one of the target nodes
+    if (currentNode === node1 || currentNode === node2) return currentNode;
+
+    // recursively search the left sub-tree
+    const left = this.lowestCommonAncestor(node1, node2, currentNode.left);
+
+    // recursively search the right sub-tree
+    const right = this.lowestCommonAncestor(node1, node2, currentNode.right);
+
+    // if neither left nor right is null, currentNode is the ancestor
+    if (left !== null && right !== null) return currentNode;
+
+    // if one node is not null, return it
+    if (left !== null || right !== null) return left || right;
+
+    // left and right are both null, return null
+    if (left === null && right === null) return null;
   }
 }
 
