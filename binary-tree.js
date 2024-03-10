@@ -20,25 +20,57 @@ class BinaryTree {
     if (!this.root)
       return 0;
 
-    // Call the helper function to find the minimum depth
+    // call the helper function to find the minimum depth
     function findMinDepth(node) {
-      // If node is null, return Infinity
-      if (!node)
-        return Infinity;
-      // If node is a leaf, return 1
-      if (!node.left && !node.right)
+      // if the node is null, return 0
+      if (node === null)
+        return 0;
+
+      // if the node is a leaf, return 1
+      if (node.left === null && node.right === null)
         return 1;
 
-      // Otherwise, return the minimum depth of the left and right subtrees
-      return Math.min(findMinDepth(node.left), findMinDepth(node.right)) + 1;
+      // if the node has no left child, return the minimum depth of the right child + 1
+      if (!node.left)
+        return findMinDepth(node.right) + 1;
+
+      // if the node has no right child, return the minimum depth of the left child + 1
+      if (!node.right)
+        return findMinDepth(node.left) + 1;
+
+      return (Math.min(findMinDepth(node.left), findMinDepth(node.right)) + 1);
     }
+    return findMinDepth(this.root);
   }
 
   /** maxDepth(): return the maximum depth of the tree -- that is,
    * the length of the longest path from the root to a leaf. */
 
   maxDepth() {
+    if (!this.root)
+      return 0;
 
+    // call the helper function to find the maximum depth
+    function findMaxDepth() {
+      // if the node is null, return 0
+      if (node === null)
+        return 0;
+
+      // if the node is a leaf, return 1
+      if (node.left === null && node.right === null)
+        return 1;
+
+      // if the node has no left child, return the maximum depth of the right child + 1
+      if (node.left === null)
+        return findMaxDepth(node.right) + 1;
+
+      // if the node has no right child, return the maximum depth of the left child + 1
+      if (node.right === null)
+        return findMaxDepth(node.left) + 1;
+
+      return (Math.max(findMaxDepth(node.left), findMaxDepth(node.right)) + 1);
+    }
+    return fincMaxDepth(this.root);
   }
 
   /** maxSum(): return the maximum sum you can obtain by traveling along a path in the tree.
