@@ -51,26 +51,20 @@ class BinaryTree {
       return 0;
 
     // call the helper function to find the maximum depth
-    function findMaxDepth() {
-      // if the node is null, return 0
-      if (node === null)
-        return 0;
-
-      // if the node is a leaf, return 1
+    function findMaxDepth(node) {
       if (node.left === null && node.right === null)
         return 1;
-
-      // if the node has no left child, return the maximum depth of the right child + 1
       if (node.left === null)
         return findMaxDepth(node.right) + 1;
-
-      // if the node has no right child, return the maximum depth of the left child + 1
       if (node.right === null)
         return findMaxDepth(node.left) + 1;
 
-      return (Math.max(findMaxDepth(node.left), findMaxDepth(node.right)) + 1);
+      return (
+        Math.max(findMaxDepth(node.left), findMaxDepth(node.right)) + 1
+      );
     }
-    return fincMaxDepth(this.root);
+
+    return findMaxDepth(this.root);
   }
 
   /** maxSum(): return the maximum sum you can obtain by traveling along a path in the tree.
@@ -106,20 +100,28 @@ class BinaryTree {
     if (!this.root)
       return null;
 
-    // call the helper function to find the next larger value
-    function findNextLarger(node) {
-      if (node === null)
-        return null;
+    // let's use BFS for this!
+    let queue = [this.root];
+    let closest = null;
 
-      // if the current node value is less than or equal to the lower bound, search the right subtree
-      if (node.val <= lowerBound)
-        return findNextLarger(node.right);
+    // while there are nodes in the queue
+    while (queue.length) {
+      let currentNode = queue.shift();
+      let currentVal = currentNode.val;
+      let higherThanLowerBound = currentVal > lowerBound;
+      let shouldReassignClosest = currentVal < closest || closest === null;
 
-      // if the current node value is greater than the lower bound, search the left subtree
-      const left = findNextLarger(node.left);
-      return (left !== null) ? left : node.val;
+      // if the current value is higher than the lower bound and should be reassigned
+      if (higherThanLowerBound && shouldReassignClosest) {
+        closest = currentVal;
+      }
+
+      // if the current node has a left child, add it to the queue
+      if (currentNode.left) queue.push(currentNode.left);
+      if (currentNode.right) queue.push(currentNode.right);
     }
-    return findNextLarger(this.root);
+
+    return closest;
   }
 
   /** Further study!
